@@ -3,6 +3,7 @@ package homework.transport;
 import homework.Validation;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class Car {
     private final String brand;
@@ -15,7 +16,7 @@ public class Car {
     private final String bodyType;
     private String registrationNumber;
     private final int seatQuantity;
-    private Boolean isSummerTyre;
+    private boolean isSummerTyre;
     private final Key key;
 
     public Car(String brand,
@@ -28,19 +29,19 @@ public class Car {
                String bodyType,
                String registrationNumber,
                int seatQuantity,
-               Boolean isSummerTyre,
+               boolean isSummerTyre,
                Key key) {
-        this.brand = Validation.validateString(brand, "default");
-        this.model = Validation.validateString(model, "default");
+        this.brand = validateCarParameter(brand);
+        this.model = validateCarParameter(model);
         this.engineVolume = validateEngineVolume(engineVolume);
-        this.color = Validation.validateString(color, "белый");
+        this.color = validateColor(color);
         this.year = validateYear(year);
-        this.country = Validation.validateString(country, "default");
-        this.gearBox = Validation.validateString(gearBox, "default");
-        this.bodyType = Validation.validateString(bodyType, "default");
-        this.registrationNumber = Validation.validateString(registrationNumber, "default");
+        this.country = validateCarParameter(country);
+        this.gearBox = validateCarParameter(gearBox);
+        this.bodyType = validateCarParameter(bodyType);
+        this.registrationNumber = validateRegistrationNumber(registrationNumber);
         this.seatQuantity = validateSeatQuantity(seatQuantity);
-        this.isSummerTyre = Validation.validateBoolean(isSummerTyre);
+        this.isSummerTyre = validateCarParameter(isSummerTyre);
         this.key = key;
     }
 
@@ -65,7 +66,7 @@ public class Car {
     }
 
     public void setColor(String color) {
-        this.color = Validation.validateString(color, "белый");
+        this.color = validateColor(color);
     }
 
     public int getYear() {
@@ -82,7 +83,7 @@ public class Car {
     }
 
     public void setGearBox(String gearBox) {
-        this.gearBox = Validation.validateString(gearBox, "default");
+        this.gearBox = validateCarParameter(gearBox);
     }
 
     public String getBodyType() {
@@ -94,7 +95,7 @@ public class Car {
     }
 
     public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = Validation.validateString(registrationNumber, "default");
+        this.registrationNumber = validateRegistrationNumber(registrationNumber);
     }
 
     public int getSeatQuantity() {
@@ -114,12 +115,12 @@ public class Car {
     }
 
     public static class Key {
-        private final Boolean isRemoteEngineStart;
-        private final Boolean isKeylessEntry;
+        private final boolean isRemoteEngineStart;
+        private final boolean isKeylessEntry;
 
-        public Key(Boolean isRemoteEngineStart, Boolean isKeylessEntry) {
-            this.isRemoteEngineStart = Validation.validateBoolean(isRemoteEngineStart);
-            this.isKeylessEntry = Validation.validateBoolean(isKeylessEntry);
+        public Key(boolean isRemoteEngineStart, boolean isKeylessEntry) {
+            this.isRemoteEngineStart = validateCarParameter(isRemoteEngineStart);
+            this.isKeylessEntry = validateCarParameter(isKeylessEntry);
         }
 
         @Override
@@ -133,29 +134,47 @@ public class Car {
     @Override
     public String toString() {
         String summerTyre = isSummerTyre ? "летняя" : "зимняя";
-//        String remoteStart =
-        return brand + " " + model + "\n    год выпуска - " + year + "\n    страна сборки - " + country + "\n    цвет - "
-                + color + "\n    объем двигателя - " + engineVolume + " л\n    коробка передач - " + gearBox + "\n    тип кузова - "
-                + bodyType + "\n    регистрационный номер - " + registrationNumber + "\n    количество мест - "
-                + seatQuantity + "\n    резина - " + summerTyre + "\n    " + key;
+        return brand + " " + model + "\n    объем двигателя - " + engineVolume + " л\n    цвет - " + color +
+                "\n    год выпуска - " + year + "\n    страна сборки - " + country + "\n    коробка передач - " + gearBox +
+                "\n    тип кузова - " + bodyType + "\n    регистрационный номер - " + registrationNumber +
+                "\n    количество мест - " + seatQuantity + "\n    резина - " + summerTyre + "\n    " + key;
     }
 
-    //  Метод для замены шин (летней на зимнюю и наоборот) в зависимости от сезона (летняя - с апреля по октябрь)
+    //  Метод для замены шин (летней на зимнюю и наоборот) в зависимости от месяца (летняя - с апреля по октябрь)
     public static boolean changeTyre(int currentMonth) {
         return currentMonth > 3 && currentMonth < 11;
     }
 
-    //  Блок валидации параметров применительно только к данному классу
+    //  Блок валидации параметров
+    public String validateCarParameter(String carParameter) {
+        return Validation.validateString(carParameter, "default");
+    }
+
     public double validateEngineVolume(double engineVolume) {
         return engineVolume <= 0 ? 1.5 : engineVolume;
+    }
+
+    public String validateColor(String color) {
+        return Validation.validateString(color, "белый");
     }
 
     public int validateYear(int year) {
         return year <= 0 ? 2000 : year;
     }
 
+    public String validateRegistrationNumber(String registrationNumber) {
+        if (Pattern.matches("[авекмнорстух][0-9]{3}[авекмнорстух]{2}[0-9]{2,3}",registrationNumber)) {
+            return registrationNumber;
+        } else {
+            return "ошибка! регистрационный номер указан неверно";
+        }
+    }
     public int validateSeatQuantity(int seatQuantity) {
         return seatQuantity <= 0 ? 4 : seatQuantity;
+    }
+
+    public static boolean validateCarParameter(boolean carParameter) {
+        return Validation.validateBoolean(carParameter);
     }
 
     @Override

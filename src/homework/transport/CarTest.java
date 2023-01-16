@@ -23,7 +23,7 @@ public class CarTest {
         testCar.setEngineVolume(0);
         testCar.setColor("");
         testCar.setGearBox(" ");
-        testCar.setRegistrationNumber("");
+        testCar.setRegistrationNumber("п123ро196");
         System.out.println(testCar);
     }
 }

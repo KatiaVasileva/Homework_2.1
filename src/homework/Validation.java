@@ -10,10 +10,6 @@ public class Validation {
     }
 
     public static Boolean validateBoolean(Boolean booleanValue) {
-        if (booleanValue != null) {
-            return booleanValue;
-        } else {
-            throw new IllegalArgumentException("Введено неправильное значение.");
-        }
+        return booleanValue != null && booleanValue;
     }
 }
