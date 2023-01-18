@@ -1,17 +1,11 @@
 package homework.transport;
 
 import homework.Validation;
-
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class Car {
-    private final String brand;
-    private final String model;
+public class Car extends Transport {
     private double engineVolume;
-    private String color;
-    private final int year;
-    private final String country;
     private String gearBox;
     private final String bodyType;
     private String registrationNumber;
@@ -22,6 +16,7 @@ public class Car {
     public Car(String brand,
                String model,
                double engineVolume,
+               int maxSpeed,
                String color,
                int year,
                String country,
@@ -31,26 +26,14 @@ public class Car {
                int seatQuantity,
                boolean isSummerTyre,
                Key key) {
-        this.brand = validateCarParameter(brand);
-        this.model = validateCarParameter(model);
+        super(brand, model, year, country, color, maxSpeed);
         this.engineVolume = validateEngineVolume(engineVolume);
-        this.color = validateColor(color);
-        this.year = validateYear(year);
-        this.country = validateCarParameter(country);
-        this.gearBox = validateCarParameter(gearBox);
-        this.bodyType = validateCarParameter(bodyType);
+        this.gearBox = Validation.validateCarParameter(gearBox);
+        this.bodyType = Validation.validateCarParameter(bodyType);
         this.registrationNumber = validateRegistrationNumber(registrationNumber);
         this.seatQuantity = validateSeatQuantity(seatQuantity);
-        this.isSummerTyre = validateCarParameter(isSummerTyre);
+        this.isSummerTyre = Validation.validateBoolean(isSummerTyre);
         this.key = key;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public String getModel() {
-        return model;
     }
 
     public double getEngineVolume() {
@@ -61,29 +44,12 @@ public class Car {
         this.engineVolume = validateEngineVolume(engineVolume);
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = validateColor(color);
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-
-    public String getCountry() {
-        return country;
-    }
-
     public String getGearBox() {
         return gearBox;
     }
 
     public void setGearBox(String gearBox) {
-        this.gearBox = validateCarParameter(gearBox);
+        this.gearBox = Validation.validateCarParameter(gearBox);
     }
 
     public String getBodyType() {
@@ -119,8 +85,8 @@ public class Car {
         private final boolean isKeylessEntry;
 
         public Key(boolean isRemoteEngineStart, boolean isKeylessEntry) {
-            this.isRemoteEngineStart = validateCarParameter(isRemoteEngineStart);
-            this.isKeylessEntry = validateCarParameter(isKeylessEntry);
+            this.isRemoteEngineStart = Validation.validateBoolean(isRemoteEngineStart);
+            this.isKeylessEntry = Validation.validateBoolean(isKeylessEntry);
         }
 
         @Override
@@ -134,8 +100,7 @@ public class Car {
     @Override
     public String toString() {
         String summerTyre = isSummerTyre ? "летняя" : "зимняя";
-        return brand + " " + model + "\n    объем двигателя - " + engineVolume + " л\n    цвет - " + color +
-                "\n    год выпуска - " + year + "\n    страна сборки - " + country + "\n    коробка передач - " + gearBox +
+        return super.toString() + "\n    объем двигателя - " + engineVolume + " л\n    коробка передач - " + gearBox +
                 "\n    тип кузова - " + bodyType + "\n    регистрационный номер - " + registrationNumber +
                 "\n    количество мест - " + seatQuantity + "\n    резина - " + summerTyre + "\n    " + key;
     }
@@ -146,20 +111,12 @@ public class Car {
     }
 
     //  Блок валидации параметров
-    public String validateCarParameter(String carParameter) {
-        return Validation.validateString(carParameter, "default");
-    }
-
     public double validateEngineVolume(double engineVolume) {
         return engineVolume <= 0 ? 1.5 : engineVolume;
     }
 
-    public String validateColor(String color) {
-        return Validation.validateString(color, "белый");
-    }
-
-    public int validateYear(int year) {
-        return year <= 0 ? 2000 : year;
+    public int validateMaxSpeed(int maxSpeed) {
+        return maxSpeed <= 0 ? 160 : maxSpeed;
     }
 
     public String validateRegistrationNumber(String registrationNumber) {
@@ -173,10 +130,6 @@ public class Car {
         return seatQuantity <= 0 ? 4 : seatQuantity;
     }
 
-    public static boolean validateCarParameter(boolean carParameter) {
-        return Validation.validateBoolean(carParameter);
-    }
-
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -185,13 +138,17 @@ public class Car {
         if (other == null || getClass() != other.getClass()) {
             return false;
         }
+        if (!super.equals(other)) {
+            return false;
+        }
         Car car = (Car) other;
-        return year == car.year && seatQuantity == car.seatQuantity && Objects.equals(brand, car.brand) &&
-                Objects.equals(model, car.model) && Objects.equals(country, car.country) && Objects.equals(bodyType, car.bodyType);
+        return super.equals(other) && Double.compare(car.engineVolume, engineVolume) == 0 && seatQuantity == car.seatQuantity
+                && Objects.equals(gearBox, car.gearBox) && Objects.equals(bodyType, car.bodyType)
+                && Objects.equals(registrationNumber, car.registrationNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(brand, model, year, country, bodyType, seatQuantity);
+        return Objects.hash(super.hashCode(), engineVolume, gearBox, bodyType, registrationNumber, seatQuantity);
     }
 }

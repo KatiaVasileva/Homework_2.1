@@ -9,6 +9,9 @@ public class Validation {
         }
     }
 
+    public static String validateCarParameter(String carParameter) {
+        return Validation.validateString(carParameter, "default");
+    }
     public static Boolean validateBoolean(Boolean booleanValue) {
         return booleanValue != null && booleanValue;
     }
