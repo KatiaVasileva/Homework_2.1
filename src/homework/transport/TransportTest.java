@@ -38,7 +38,7 @@ public class TransportTest {
         System.out.println("Блок проверки (автобус)");
         System.out.println(testBus);
         testBus.setColor(" ");
-        testBus.setMaxSpeed(0);
+        testBus.setMaxSpeed(-1);
         System.out.println(testBus);
 
     }

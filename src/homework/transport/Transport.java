@@ -2,7 +2,9 @@ package homework.transport;
 
 import homework.Validation;
 
-public class Transport {
+import java.util.Objects;
+
+public abstract class Transport {
     private final String brand;
     private final String model;
     private final int year;
@@ -65,13 +67,29 @@ public class Transport {
         return Validation.validateString(color, "белый");
     }
 
-    public int validateMaxSpeed(int maxSpeed) {
-        return maxSpeed <= 0 ? 160 : maxSpeed;
-    }
+    public abstract int validateMaxSpeed(int maxSpeed);
 
     @Override
     public String toString() {
         return brand + " " + model + "\n    год выпуска - " + year + "\n    страна сборки - " + country +
                 "\n    цвет - " + color + "\n    максимальная скорость - " + maxSpeed + " км/ч";
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Transport transport = (Transport) other;
+        return year == transport.year && Objects.equals(brand, transport.brand) && Objects.equals(model, transport.model)
+                && Objects.equals(country, transport.country);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(brand, model, year, country);
     }
 }

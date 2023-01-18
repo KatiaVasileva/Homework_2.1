@@ -11,7 +11,6 @@ public class Bus extends Transport{
         super(brand, model, year, country, color, maxSpeed);
     }
 
-    @Override
     public int validateMaxSpeed(int maxSpeed) {
         return maxSpeed <= 0 ? 90 : maxSpeed;
     }

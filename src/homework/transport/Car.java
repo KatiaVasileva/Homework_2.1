@@ -100,9 +100,7 @@ public class Car extends Transport {
     @Override
     public String toString() {
         String summerTyre = isSummerTyre ? "летняя" : "зимняя";
-        return getBrand() + " " + getModel() + "\n    объем двигателя - " + engineVolume +
-                " л\n    максимальная скорость - " + getMaxSpeed() + " км/ч\n    цвет - " + getColor() +
-                "\n    год выпуска - " + getYear() + "\n    страна сборки - " + getCountry() + "\n    коробка передач - " + gearBox +
+        return super.toString() + "\n    объем двигателя - " + engineVolume + " л\n    коробка передач - " + gearBox +
                 "\n    тип кузова - " + bodyType + "\n    регистрационный номер - " + registrationNumber +
                 "\n    количество мест - " + seatQuantity + "\n    резина - " + summerTyre + "\n    " + key;
     }
@@ -115,6 +113,10 @@ public class Car extends Transport {
     //  Блок валидации параметров
     public double validateEngineVolume(double engineVolume) {
         return engineVolume <= 0 ? 1.5 : engineVolume;
+    }
+
+    public int validateMaxSpeed(int maxSpeed) {
+        return maxSpeed <= 0 ? 160 : maxSpeed;
     }
 
     public String validateRegistrationNumber(String registrationNumber) {
@@ -130,16 +132,23 @@ public class Car extends Transport {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        if (!super.equals(other)) {
+            return false;
+        }
         Car car = (Car) other;
-        return Double.compare(car.engineVolume, engineVolume) == 0 && seatQuantity == car.seatQuantity
+        return super.equals(other) && Double.compare(car.engineVolume, engineVolume) == 0 && seatQuantity == car.seatQuantity
                 && Objects.equals(gearBox, car.gearBox) && Objects.equals(bodyType, car.bodyType)
                 && Objects.equals(registrationNumber, car.registrationNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(engineVolume, gearBox, bodyType, registrationNumber, seatQuantity);
+        return Objects.hash(super.hashCode(), engineVolume, gearBox, bodyType, registrationNumber, seatQuantity);
     }
 }
