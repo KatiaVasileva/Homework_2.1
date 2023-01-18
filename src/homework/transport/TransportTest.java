@@ -1,6 +1,6 @@
 package homework.transport;
 
-public class CarTest {
+public class TransportTest {
     public static void main(String[] args) {
 
         Car testCar = new Car(
